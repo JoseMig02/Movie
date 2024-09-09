@@ -1,112 +1,80 @@
 <template>
   <q-page>
+    <!-- Modal Trigger Button -->
     <q-btn @click="openModal" label="Add Movie" color="primary" />
-    
-    <q-dialog v-model="isModalOpen" persistent>
+
+    <!-- Modal with Form -->
+    <q-dialog v-model="isModalOpen">
       <q-card style="min-width: 600px">
         <q-card-section>
-          <q-form @submit.prevent="submitForm" class="q-pa-md">
-            <div class="q-mb-md">
-              <q-input
-                v-model="movie.title"
-                label="Title"
-                required
-              />
-            </div>
+          <q-form @submit.prevent="submitForm">
+            <!-- Form Controls -->
+            <q-input v-model="movie.titulo" label="Title" />
+            
+            <q-select
+              v-model="movie.genero"
+              :options="genres"
+              label="Genre"
+              option-label="label"
+              option-value="value"
+            />
 
-            <div class="q-mb-md">
-              <q-input
-                v-model="movie.description"
-                label="Description"
-                type="textarea"
-                rows="4"
-              />
-            </div>
+            <q-select
+              v-model="movie.clasificacion"
+              :options="ratings"
+              label="Rating"
+              option-label="label"
+              option-value="value"
+            />
 
-            <div class="q-mb-md">
-              <q-select
-                v-model="movie.genre"
-                :options="genres"
-                label="Genre"
-                required
-              />
-            </div>
+            <q-input
+              v-model="actorInput"
+              label="Actors"
+              @keyup.enter="addActor"
+            />
+            <q-chip
+              v-for="(actor, index) in movie.actores"
+              :key="index"
+              removable
+              @remove="removeActor(index)"
+            >
+              {{ actor }}
+            </q-chip>
 
-            <div class="q-mb-md">
-              <q-select
-                v-model="movie.rating"
-                :options="ratings"
-                label="Rating"
-                required
-              />
-            </div>
+            <q-toggle
+              v-model="movie.enCartelera"
+              label="In Theaters"
+            />
 
-            <div class="q-mb-md">
-              <q-checkbox
-                v-model="movie.isFavorite"
-                label="Is Favorite"
-              />
-            </div>
+            <q-input
+              v-model="movie.fechaEstreno"
+              type="date"
+              label="Release Date"
+            />
 
-            <div class="q-mb-md">
-              <q-radio
-                v-model="movie.ageRating"
-                :options="ageRatings"
-                label="Age Rating"
-              />
-            </div>
+            <q-input
+              v-model="movie.imagenUrl"
+              label="Image URL"
+            />
 
-            <div class="q-mb-md">
-              <q-img
-                v-if="movie.imageUrl"
-                :src="movie.imageUrl"
-                class="q-mb-md"
-                style="max-width: 200px;"
-              />
-              <q-input
-                v-model="movie.imageUrl"
-                label="Image URL"
-                type="text"
-              />
-            </div>
+            <q-input
+              v-model="movie.sinopsis"
+              type="textarea"
+              label="Synopsis"
+            />
 
-            <div class="q-mb-md">
-              <q-input
-                v-model="movie.videoUrl"
-                label="Video URL"
-                type="text"
-              />
-            </div>
+            <q-input
+              v-model="movie.trailerUrl"
+              label="Trailer URL"
+            />
 
-            <div class="q-mb-md">
-              <q-input
-                v-model="movie.audioUrl"
-                label="Audio URL"
-                type="text"
-              />
-            </div>
+            <q-input
+              v-model="movie.audioPromocionalUrl"
+              label="Promotional Audio URL"
+            />
 
-            <div class="q-mb-md">
-              <q-input
-                v-model="movie.releaseDate"
-                type="date"
-                label="Release Date"
-              />
-            </div>
-
-            <div class="q-mb-md">
-              <q-btn
-                label="Submit"
-                type="submit"
-                color="primary"
-                class="q-mr-sm"
-              />
-              <q-btn
-                label="Cancel"
-                color="secondary"
-                @click="closeModal"
-              />
-            </div>
+            <q-btn type="submit" label="Submit" color="primary" />
+            <q-btn @click="closeModal" label="Cancel" color="secondary" flat />
           </q-form>
         </q-card-section>
       </q-card>
@@ -116,21 +84,24 @@
 
 <script setup>
 import { ref } from 'vue';
+import { createMovie } from '../API/Movie'; // Asegúrate de la ruta correcta
 
 const isModalOpen = ref(false);
 
 const movie = ref({
-  title: '',
-  description: '',
-  genre: null,
-  rating: null,
-  isFavorite: false,
-  ageRating: '',
-  imageUrl: '',
-  videoUrl: '',
-  audioUrl: '',
-  releaseDate: ''
+  titulo: '',
+  genero: null,
+  clasificacion: null,
+  actores: [],
+  enCartelera: false,
+  fechaEstreno: '',
+  imagenUrl: '',
+  sinopsis: '',
+  trailerUrl: '',
+  audioPromocionalUrl: ''
 });
+
+const actorInput = ref('');
 
 const genres = ref([
   { label: 'Action', value: 'action' },
@@ -145,12 +116,6 @@ const ratings = ref([
   { label: 'R', value: 'r' }
 ]);
 
-const ageRatings = ref([
-  { label: 'All Ages', value: 'all' },
-  { label: '12+', value: '12+' },
-  { label: '18+', value: '18+' }
-]);
-
 const openModal = () => {
   isModalOpen.value = true;
 };
@@ -159,10 +124,28 @@ const closeModal = () => {
   isModalOpen.value = false;
 };
 
-const submitForm = () => {
-  console.log('Form submitted:', movie.value);
-  // Aquí puedes hacer una llamada a la API para guardar la película
-  closeModal();
+const submitForm = async () => {
+  try {
+    await createMovie({
+      ...movie.value,
+      genero: movie.value.genero?.value, // Send only value
+      clasificacion: movie.value.clasificacion?.value // Send only value
+    });
+    closeModal();
+  } catch (error) {
+    console.error('Error submitting form:', error);
+  }
+};
+
+const addActor = () => {
+  if (actorInput.value.trim() !== '') {
+    movie.value.actores.push(actorInput.value.trim());
+    actorInput.value = '';
+  }
+};
+
+const removeActor = (index) => {
+  movie.value.actores.splice(index, 1);
 };
 </script>
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/movie'; // Asegúrate de usar la URL correcta para tu API
+const API_URL = 'https://localhost:7265/api/Movie'; // Asegúrate de usar la URL correcta para tu API
 
 // Obtener todas las películas
 export const getMovies = async () => {
