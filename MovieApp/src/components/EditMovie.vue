@@ -138,7 +138,4 @@
   }, { immediate: true });
   </script>
   
-  <style scoped>
-  /* Añadir estilos según sea necesario */
-  </style>
-  
+ 

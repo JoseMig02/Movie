@@ -14,7 +14,7 @@
             <template v-slot:body-cell-actions="props">
               <q-td align="center" :props="props">
                 
-                <EditMovie @click="editMovie(props.row)" />
+                <EditMovie :movie ="props.row" />
                 <!-- Se pasa el ID de la película a DeleteMovie -->
                 <DeleteMovie :id="props.row.id" @delete-movie="handleDeleteMovie" />
               </q-td>
@@ -74,9 +74,6 @@
       fetchMovies();
     });
 
-    watch(() => movies.value, () => {
-      fetchMovies()
-    }, { immediate: true });
     </script>
 
     <style scoped>
