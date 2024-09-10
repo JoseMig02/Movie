@@ -1,157 +1,121 @@
 <template>
-  <q-page>
-    <!-- Modal Trigger Button -->
-    <q-btn @click="openModal" label="Add Movie" color="primary" />
+  <q-page class="q-pa-md bg-grey-1">
+    <q-card flat bordered class="q-pa-md">
+      <q-card-section>
+        <div class="text-h6">Añadir Película</div>
+        <AddMovie @add-movie ="handleAdd"/>
+      </q-card-section>
 
-    <!-- Modal with Form -->
-    <q-dialog v-model="isModalOpen">
-      <q-card style="min-width: 600px">
-        <q-card-section>
-          <q-form @submit.prevent="submitForm">
-            <!-- Form Controls -->
-            <q-input v-model="movie.titulo" label="Title" />
-            
-            <q-select
-              v-model="movie.genero"
-              :options="genres"
-              label="Genre"
-              option-label="label"
-              option-value="value"
+      <q-card-section>
+        <div class="text-h6">Lista de Películas</div>
+      </q-card-section>
+
+      <q-table
+        :rows="movies"
+        :columns="columns"
+        row-key="id"
+        flat
+        bordered
+        separator="cell"
+        dense
+      >
+        <template v-slot:body-cell-actions="props">
+          <q-td align="center" :props="props">
+            <q-btn
+              icon="edit"
+              @click="editMovie(props.row)"
+              color="primary"
+              flat
+              round
+              dense
+              class="q-mr-sm"
             />
-
-            <q-select
-              v-model="movie.clasificacion"
-              :options="ratings"
-              label="Rating"
-              option-label="label"
-              option-value="value"
-            />
-
-            <q-input
-              v-model="actorInput"
-              label="Actors"
-              @keyup.enter="addActor"
-            />
-            <q-chip
-              v-for="(actor, index) in movie.actores"
-              :key="index"
-              removable
-              @remove="removeActor(index)"
-            >
-              {{ actor }}
-            </q-chip>
-
-            <q-toggle
-              v-model="movie.enCartelera"
-              label="In Theaters"
-            />
-
-            <q-input
-              v-model="movie.fechaEstreno"
-              type="date"
-              label="Release Date"
-            />
-
-            <q-input
-              v-model="movie.imagenUrl"
-              label="Image URL"
-            />
-
-            <q-input
-              v-model="movie.sinopsis"
-              type="textarea"
-              label="Synopsis"
-            />
-
-            <q-input
-              v-model="movie.trailerUrl"
-              label="Trailer URL"
-            />
-
-            <q-input
-              v-model="movie.audioPromocionalUrl"
-              label="Promotional Audio URL"
-            />
-
-            <q-btn type="submit" label="Submit" color="primary" />
-            <q-btn @click="closeModal" label="Cancel" color="secondary" flat />
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+            <!-- Se pasa el ID de la película a DeleteMovie -->
+            <DeleteMovie :id="props.row.id" @delete-movie="handleDeleteMovie" />
+          </q-td>
+        </template>
+      </q-table>
+    </q-card>
   </q-page>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { createMovie } from '../API/Movie'; // Asegúrate de la ruta correcta
+import { ref, onMounted } from 'vue';
+import AddMovie from '../components/AddMovie.vue';
+import DeleteMovie from 'src/components/DeleteMovie.vue';
+import { getMovies, deleteMovie } from '../API/Movie'; // Ajusta la ruta según tu proyecto
 
-const isModalOpen = ref(false);
+const movies = ref([]);
+const columns = [
+  { name: 'titulo', label: 'Título', align: 'left', field: 'titulo', sortable: true },
+  { name: 'genero', label: 'Género', align: 'left', field: 'genero', sortable: true },
+  { name: 'clasificacion', label: 'Clasificación', align: 'left', field: 'clasificacion', sortable: true },
+  { name: 'fechaEstreno', label: 'Fecha de Estreno', align: 'left', field: 'fechaEstreno', sortable: true },
+  { name: 'enCartelera', label: 'En Cartelera', align: 'center', field: 'enCartelera' },
+  { name: 'actions', label: 'Acciones', align: 'center' },
+];
 
-const movie = ref({
-  titulo: '',
-  genero: null,
-  clasificacion: null,
-  actores: [],
-  enCartelera: false,
-  fechaEstreno: '',
-  imagenUrl: '',
-  sinopsis: '',
-  trailerUrl: '',
-  audioPromocionalUrl: ''
-});
-
-const actorInput = ref('');
-
-const genres = ref([
-  { label: 'Action', value: 'action' },
-  { label: 'Comedy', value: 'comedy' },
-  { label: 'Drama', value: 'drama' }
-]);
-
-const ratings = ref([
-  { label: 'G', value: 'g' },
-  { label: 'PG', value: 'pg' },
-  { label: 'PG-13', value: 'pg13' },
-  { label: 'R', value: 'r' }
-]);
-
-const openModal = () => {
-  isModalOpen.value = true;
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-};
-
-const submitForm = async () => {
+// Cargar las películas desde la API
+const fetchMovies = async () => {
   try {
-    await createMovie({
-      ...movie.value,
-      genero: movie.value.genero?.value, // Send only value
-      clasificacion: movie.value.clasificacion?.value // Send only value
-    });
-    closeModal();
+    movies.value = await getMovies();
   } catch (error) {
-    console.error('Error submitting form:', error);
+    console.error('Error fetching movies:', error);
   }
 };
 
-const addActor = () => {
-  if (actorInput.value.trim() !== '') {
-    movie.value.actores.push(actorInput.value.trim());
-    actorInput.value = '';
-  }
+// Manejar la eliminación de una película
+const handleDeleteMovie = async (id) => {
+    try {
+      await deleteMovie(id);
+      await fetchMovies(); // Recargar la lista de películas
+    } catch (error) {
+      console.error('Error deleting movie:', error);
+    }
+
 };
 
-const removeActor = (index) => {
-  movie.value.actores.splice(index, 1);
+const handleAdd =  async()=>{
+  await fetchMovies(); 
+}
+
+// Editar una película
+const editMovie = (movie) => {
+  console.log('Edit movie:', movie);
 };
+
+onMounted(() => {
+  fetchMovies();
+});
 </script>
 
 <style scoped>
 .q-page {
-  max-width: 600px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.q-btn {
+  min-width: 36px;
+  height: 36px;
+}
+
+.q-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.q-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.q-icon {
+  font-size: 24px;
+}
+
+.q-table th {
+  background-color: #f0f0f0;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 </style>
