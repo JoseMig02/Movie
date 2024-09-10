@@ -10,7 +10,7 @@
             <q-form @submit.prevent="submitForm">
               <!-- Form Controls -->
               <q-input 
-              :rules="[val => !!val || 'required']" v-model="movie.titulo" label="Title" />
+              :rules="[val => !!val || 'required']" v-model="movie.titulo" label="Title"  outlined rounded />
               
               <q-select :rules="[val => !!val || 'required']"
                 v-model="movie.genero"
@@ -18,6 +18,7 @@
                 label="Genre"
                 option-label="label"
                 option-value="value"
+                outlined rounded
               />
   
               <q-select :rules="[val => !!val || 'required']"
@@ -26,52 +27,46 @@
                 label="Rating"
                 option-label="label"
                 option-value="value"
+                outlined rounded
               />
-  
-              <q-input :rules="[val => !!val || 'required']"
-                v-model="actorInput"
-                label="Actors"
-                @keyup.enter="addActor"
-              />
-              <q-chip 
-                v-for="(actor, index) in movie.actores"
-                :key="index"
-                removable
-                @remove="removeActor(index)"
-              >
-                {{ actor }}
-              </q-chip>
   
               <q-toggle
                 v-model="movie.enCartelera"
                 label="In Theaters"
               />
-  
-              <q-input :rules="[val => !!val || 'required']"
+   
+               <q-input :rules="[val => !!val || 'required']"
                 v-model="movie.fechaEstreno"
                 type="date"
                 label="Release Date"
+                outlined rounded
               />
+               
+              
   
               <q-input :rules="[val => !!val || 'required']"
                 v-model="movie.imagenUrl"
                 label="Image URL"
+                outlined rounded
               />
   
               <q-input :rules="[val => !!val || 'required']"
                 v-model="movie.sinopsis"
                 type="textarea"
                 label="Synopsis"
+                outlined rounded
               />
   
               <q-input :rules="[val => !!val || 'required']"
                 v-model="movie.trailerUrl"
                 label="Trailer URL"
+                outlined rounded
               />
   
               <q-input :rules="[val => !!val || 'required']"
                 v-model="movie.audioPromocionalUrl"
                 label="Promotional Audio URL"
+                outlined rounded
               />
   
               <q-btn type="submit" label="Submit" color="primary" />
@@ -93,7 +88,6 @@
     titulo: '',
     genero: null,
     clasificacion: null,
-    actores: [],
     enCartelera: false,
     fechaEstreno: '',
     imagenUrl: '',
@@ -109,14 +103,13 @@
     { label: 'Comedy', value: 'comedy' },
     { label: 'Drama', value: 'drama' }
   ]);
-  
   const ratings = ref([
-    { label: 'G', value: 'g' },
-    { label: 'PG', value: 'pg' },
-    { label: 'PG-13', value: 'pg13' },
-    { label: 'R', value: 'r' }
-  ]);
-  
+  { label: 'G - General Audiences', value: 'g', description: 'All ages admitted. Nothing that would offend parents if viewed by children.' },
+  { label: 'PG - Parental Guidance Suggested', value: 'pg', description: 'Some material may not be suitable for children. Parents urged to give "parental guidance." May contain some material parents might not like for their young children.' },
+  { label: 'PG-13 - Parents Strongly Cautioned', value: 'pg13', description: 'Some material may be inappropriate for children under 13. Parents are urged to be cautious. Some material may be inappropriate for pre-teenagers.' },
+  { label: 'R - Restricted', value: 'r', description: 'Restricted. People under 17 require accompanying parent or adult guardian. May contain strong language, violence, sexual content, or drug use.' }
+]);
+
   const openModal = () => {
     isModalOpen.value = true;
   };

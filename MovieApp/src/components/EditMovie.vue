@@ -19,17 +19,11 @@
                 option-label="label" option-value="value" :rules="[val => !!val || 'Rating is required']"
                 outlined rounded />
   
-              <q-input v-model="actorInput" label="Actors" @keyup.enter="addActor" outlined rounded />
-              <q-chip v-for="(actor, index) in localMovie.actores" :key="index" removable
-                @remove="removeActor(index)">
-                {{ actor }}
-              </q-chip>
-  
               <q-toggle v-model="localMovie.enCartelera" label="In Theaters" />
   
               <q-input v-model="localMovie.fechaEstreno" type="date" label="Release Date"
                 :rules="[val => !!val || 'Release date is required']" outlined rounded />
-  
+
               <q-input v-model="localMovie.imagenUrl" label="Image URL"
                 :rules="[val => !!val || 'Image URL is required']" outlined rounded />
   
@@ -42,8 +36,8 @@
               <q-input v-model="localMovie.audioPromocionalUrl" label="Promotional Audio URL" outlined
                 rounded />
   
-              <q-btn type="submit" label="Save Changes" color="primary" />
-              <q-btn @click="closeModal" label="Cancel" color="secondary" flat />
+              <q-btn class="q-mt-md" type="submit" label="Save Changes" color="primary" />
+              <q-btn class="q-mt-md" @click="closeModal" label="Cancel" color="secondary" flat />
             </q-form>
           </q-card-section>
         </q-card>
@@ -67,7 +61,6 @@
     titulo: '',
     genero: null,
     clasificacion: null,
-    actores: [],
     enCartelera: false,
     fechaEstreno: '',
     imagenUrl: '',
@@ -85,12 +78,12 @@
   ]);
   
   const ratings = ref([
-    { label: 'G', value: 'g' },
-    { label: 'PG', value: 'pg' },
-    { label: 'PG-13', value: 'pg13' },
-    { label: 'R', value: 'r' }
-  ]);
-  
+  { label: 'G - General Audiences', value: 'g', description: 'All ages admitted. Nothing that would offend parents if viewed by children.' },
+  { label: 'PG - Parental Guidance Suggested', value: 'pg', description: 'Some material may not be suitable for children. Parents urged to give "parental guidance." May contain some material parents might not like for their young children.' },
+  { label: 'PG-13 - Parents Strongly Cautioned', value: 'pg13', description: 'Some material may be inappropriate for children under 13. Parents are urged to be cautious. Some material may be inappropriate for pre-teenagers.' },
+  { label: 'R - Restricted', value: 'r', description: 'Restricted. People under 17 require accompanying parent or adult guardian. May contain strong language, violence, sexual content, or drug use.' }
+]);
+
   const openModal = () => {
     if (props.movie) {
         console.log(props.movie)
@@ -119,17 +112,7 @@
     }
   };
   
-  const addActor = () => {
-    if (actorInput.value.trim() !== '') {
-      localMovie.value.actores.push(actorInput.value.trim());
-      actorInput.value = '';
-    }
-  };
-  
-  const removeActor = (index) => {
-    localMovie.value.actores.splice(index, 1);
-  };
-  
+
   // Watch for movie prop changes
   watch(() => props.movie, (newValue) => {
     if (newValue) {
