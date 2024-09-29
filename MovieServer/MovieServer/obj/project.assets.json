@@ -4529,11 +4529,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marti\\source\\repos\\MovieServer\\MovieServer\\MovieServer.csproj",
+      "projectUniqueName": "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
       "projectName": "MovieServer",
-      "projectPath": "C:\\Users\\marti\\source\\repos\\MovieServer\\MovieServer\\MovieServer.csproj",
+      "projectPath": "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
       "packagesPath": "C:\\Users\\marti\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marti\\source\\repos\\MovieServer\\MovieServer\\obj\\",
+      "outputPath": "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4561,6 +4561,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {

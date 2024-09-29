@@ -13,7 +13,7 @@
       <q-table :rows="movies" :columns="columns" row-key="id" flat bordered separator="cell" dense>
         <template v-slot:body-cell-actions="props">
           <q-td align="center" :props="props">
-            <EditMovie :movie="props.row" />
+            <EditMovie @update-movie="handleAdd" :movie="props.row" />
             <DeleteMovie :id="props.row.id" @delete-movie="handleDeleteMovie" />
           </q-td>
         </template>
@@ -29,8 +29,7 @@
         </template>
       </q-table>
 
-      <!-- Modal para reproducir el tráiler -->
-      <q-dialog v-model="isTrailerOpen" persistent>
+      <q-dialog v-model="isTrailerOpen" >
         <q-card>
           <q-card-section>
             <iframe
@@ -56,7 +55,9 @@ import { ref, onMounted } from 'vue';
 import AddMovie from '../components/AddMovie.vue';
 import DeleteMovie from 'src/components/DeleteMovie.vue';
 import EditMovie from '../components/EditMovie.vue';
-import { getMovies, deleteMovie } from '../API/Movie'; // Ajusta la ruta según tu proyecto
+import { getMovies, deleteMovie } from '../API/Movie'; 
+
+
 
 const movies = ref([]);
 const isTrailerOpen = ref(false);
@@ -67,32 +68,41 @@ const columns = [
   { name: 'genero', label: 'Género', align: 'left', field: 'genero', sortable: true },
   { name: 'clasificacion', label: 'Clasificación', align: 'left', field: 'clasificacion', sortable: true },
   { name: 'fechaEstreno', label: 'Fecha de Estreno', align: 'left', field: 'fechaEstreno', sortable: true },
-  { name: 'enCartelera', label: 'En Cartelera', align: 'center', field: 'enCartelera' },
-  { name: 'imagenUrl', label: 'Imagen', align: 'center', field: 'imagenUrl' }, // Nueva columna para imagen
-  { name: 'trailer', label: 'Tráiler', align: 'center' }, // Nueva columna para tráiler
+  { 
+    name: 'enCartelera', 
+    label: 'En Cartelera', 
+    align: 'center', 
+    field: 'enCartelera', 
+    format: val => (val ? 'En Cartelera' : 'No esta en Cartelera') // Cambiado para mostrar "En Cartelera"
+  },
+  { name: 'imagenUrl', label: 'Imagen', align: 'center', field: 'imagenUrl' }, 
+  { name: 'trailer', label: 'Tráiler', align: 'center' }, 
   { name: 'actions', label: 'Acciones', align: 'center' },
 ];
 
-// Función para abrir el tráiler
+
 const openTrailer = (url) => {
   currentTrailerUrl.value = url.replace('watch?v=', 'embed/');
   isTrailerOpen.value = true;
 };
 
-// Cargar las películas desde la API
 const fetchMovies = async () => {
   try {
-    movies.value = await getMovies();
+    const moviesData = await getMovies(); 
+    movies.value = moviesData.map(({ fechaEstreno, ...rest }) => ({
+      fechaEstreno: fechaEstreno.split('T')[0], 
+      ...rest
+    }));
   } catch (error) {
     console.error('Error fetching movies:', error);
   }
 };
 
-// Manejar la eliminación de una película
+
 const handleDeleteMovie = async (id) => {
   try {
     await deleteMovie(id);
-    await fetchMovies(); // Recargar la lista de películas
+    await fetchMovies(); 
   } catch (error) {
     console.error('Error deleting movie:', error);
   }
