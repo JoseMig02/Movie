@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "61UKQ5CMXXU=",
+  "dgSpecHash": "iwcoZHMwIdI=",
   "success": true,
-  "projectFilePath": "c:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
+  "projectFilePath": "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\marti\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\marti\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj": {}
+    "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj": {}
   },
   "projects": {
-    "c:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj": {
+    "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
+        "projectUniqueName": "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
         "projectName": "MovieServer",
-        "projectPath": "c:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
+        "projectPath": "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\MovieServer.csproj",
         "packagesPath": "C:\\Users\\marti\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\obj\\",
+        "outputPath": "C:\\Users\\marti\\Desktop\\To GitHub\\Movie\\MovieServer\\MovieServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

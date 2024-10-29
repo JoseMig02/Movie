@@ -1,14 +1,10 @@
 <template>
     <div>
-      <!-- Edit Button -->
       <q-btn @click="openModal" flat round dense color="primary" icon="edit" />
-  
-      <!-- Modal with Form -->
       <q-dialog v-model="isModalOpen">
         <q-card style="min-width: 600px; padding: 20px;">
           <q-card-section>
             <q-form @submit.prevent="submitForm">
-              <!-- Form Controls -->
               <q-input v-model="localMovie.titulo" label="Title"
                 :rules="[val => !!val || 'Title is required']" outlined rounded />
   
@@ -47,7 +43,7 @@
   
   <script setup>
   import { ref, watch } from 'vue';
-  import { updateMovie } from '../API/Movie'; // Ajusta la ruta según tu proyecto
+  import { updateMovie } from '../API/Movie'; 
   
   const props = defineProps({
     movie: Object,
@@ -87,7 +83,6 @@
   const openModal = () => {
     if (props.movie) {
         console.log(props.movie)
-      // Cargar los datos de la película en localMovie
       localMovie.value = { ...props.movie, genero: genres.value.find(g => g.value === props.movie.genero), clasificacion: ratings.value.find(r => r.value === props.movie.clasificacion) };
     }
     isModalOpen.value = true;
@@ -101,8 +96,8 @@
     try {
       await updateMovie(props.movie.id, {
         ...localMovie.value,
-        genero: localMovie.value.genero?.value, // Send only value
-        clasificacion: localMovie.value.clasificacion?.value // Send only value
+        genero: localMovie.value.genero?.value, 
+        clasificacion: localMovie.value.clasificacion?.value 
       });
   
       closeModal();
@@ -113,7 +108,6 @@
   };
   
 
-  // Watch for movie prop changes
   watch(() => props.movie, (newValue) => {
     if (newValue) {
       localMovie.value = { ...newValue, genero: genres.value.find(g => g.value === newValue.genero), clasificacion: ratings.value.find(r => r.value === newValue.clasificacion) };

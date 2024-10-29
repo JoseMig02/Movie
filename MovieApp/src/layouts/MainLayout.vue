@@ -8,17 +8,27 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="toggleLeftDrawer"
         />
 
         <q-toolbar-title>
           Quasar App
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title>
+        <div v-if="weatherData">
+          <div>
+            {{ weatherData.name }}: {{ weatherData.main.temp }}°C, {{ weatherData.weather[0].description }}
+          </div>
+        </div>
+        
+        <div v-else>
+          Cargando clima...
+        </div>
+
+        </q-toolbar-title>
+    
       </q-toolbar>
     </q-header>
-
 
     <q-page-container>
       <router-view />
@@ -26,69 +36,23 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { onMounted, ref } from 'vue'
+import { getWeather } from 'src/API/Movie';
+
+const weatherData = ref(null)
 
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+const fetchWeather = async () => {
+      const {data}= await getWeather();
+      console.log(data)
+      weatherData.value = data;
+    };
 
-export default defineComponent({
-  name: 'MainLayout',
+    onMounted(() => {
+      fetchWeather();
+    });
 
 
-  setup () {
-    const leftDrawerOpen = ref(false)
 
-    return {
-      linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
 </script>

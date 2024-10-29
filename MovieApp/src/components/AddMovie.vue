@@ -1,14 +1,10 @@
 <template>
   <q-btn id="AddMovie" @click="openModal" label="Add Movie" color="primary" />
 
-  <!-- Modal Trigger Button -->
-
-  <!-- Modal with Form -->
   <q-dialog v-model="isModalOpen">
     <q-card style="min-width: 600px; padding: 20px">
       <q-card-section>
         <q-form @submit.prevent="submitForm">
-          <!-- Form Controls -->
           <q-input
             name="title"
             :rules="[(val) => !!val || 'required']"
